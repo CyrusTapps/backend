@@ -1,7 +1,77 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import "./App.css";
 import axios from "axios";
+
+const MatrixBackground = () => {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resizeCanvas();
+
+    const katakana =
+      "アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン";
+    const latin = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const nums = "0123456789";
+    const alphabet = katakana + latin + nums;
+
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const rainDrops = Array(Math.floor(columns)).fill(1);
+
+    const draw = () => {
+      context.fillStyle = "rgba(0, 0, 0, 0.05)";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+
+      context.fillStyle = "#2a4a73";
+      context.font = fontSize + "px monospace";
+
+      rainDrops.forEach((drop, i) => {
+        const text = alphabet.charAt(
+          Math.floor(Math.random() * alphabet.length)
+        );
+        context.globalAlpha = Math.random() * 0.5 + 0.5;
+        context.fillText(text, i * fontSize, drop * fontSize);
+
+        if (drop * fontSize > canvas.height && Math.random() > 0.975) {
+          rainDrops[i] = 0;
+        }
+        rainDrops[i]++;
+      });
+      context.globalAlpha = 1;
+    };
+
+    window.addEventListener("resize", resizeCanvas);
+    const intervalId = setInterval(draw, 30);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener("resize", resizeCanvas);
+      clearInterval(intervalId);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        zIndex: -1,
+        width: "100%",
+        height: "100%",
+      }}
+    />
+  );
+};
 
 function App() {
   // const [count, setCount] = useState(0)
@@ -82,47 +152,52 @@ function App() {
   };
 
   return (
-    <div className="todo-container">
-      <h2>List of crap Shawn doesn't have time to do</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={newTodo}
-          onChange={(e) => setNewTodo(e.target.value)}
-          placeholder="Enter new todo"
-        />
-        <button type="submit">Add Todo</button>
-      </form>
+    <>
+      <MatrixBackground />
+      <div className="todo-container">
+        <h2>List of crap Shawn doesn't have time to do</h2>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            value={newTodo}
+            onChange={(e) => setNewTodo(e.target.value)}
+            placeholder="Enter new todo"
+          />
+          <button type="submit">Add Todo</button>
+        </form>
 
-      <div className="todo-list">
-        {data &&
-          data.map((item) => {
-            return (
-              <div key={item._id} className="todo-item">
-                {editingId === item._id ? (
-                  <>
-                    <input
-                      type="text"
-                      value={editText}
-                      onChange={(e) => setEditText(e.target.value)}
-                    />
-                    <button onClick={() => handleUpdate(item._id)}>Save</button>
-                    <button onClick={() => setEditingId(null)}>Cancel</button>
-                  </>
-                ) : (
-                  <>
-                    <p>{item.todo}</p>
-                    <button onClick={() => handleDelete(item._id)}>
-                      Delete
-                    </button>
-                    <button onClick={() => handleEdit(item._id)}>Edit</button>
-                  </>
-                )}
-              </div>
-            );
-          })}
+        <div className="todo-list">
+          {data &&
+            data.map((item) => {
+              return (
+                <div key={item._id} className="todo-item">
+                  {editingId === item._id ? (
+                    <>
+                      <input
+                        type="text"
+                        value={editText}
+                        onChange={(e) => setEditText(e.target.value)}
+                      />
+                      <button onClick={() => handleUpdate(item._id)}>
+                        Save
+                      </button>
+                      <button onClick={() => setEditingId(null)}>Cancel</button>
+                    </>
+                  ) : (
+                    <>
+                      <p>{item.todo}</p>
+                      <button onClick={() => handleDelete(item._id)}>
+                        Delete
+                      </button>
+                      <button onClick={() => handleEdit(item._id)}>Edit</button>
+                    </>
+                  )}
+                </div>
+              );
+            })}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
