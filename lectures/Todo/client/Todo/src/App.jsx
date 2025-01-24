@@ -25,8 +25,8 @@ function App() {
 
   const handleSubmit = (e) => {
     if (!newTodo.trim()) return;
-    //const todoItem = { todo: newTodo, created: new Date() };
-    e.preventDefault();
+
+    e.preventDefault(); //added to prevent browser refresh since I am using a form for the input
     axios({
       method: "post",
       url: "http://localhost:3000/create",
@@ -83,6 +83,7 @@ function App() {
 
   return (
     <div className="todo-container">
+      <h2>List of crap Shawn doesn't have time to do</h2>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
