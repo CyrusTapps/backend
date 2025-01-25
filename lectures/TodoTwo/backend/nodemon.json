@@ -1,0 +1,6 @@
+{
+    "watch": ["server.mjs", "models/"],
+    "ext": "js,mjs,json",
+    "ignore": ["node_modules/"],
+    "exec": "node server.mjs"
+  }
