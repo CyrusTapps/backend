@@ -56,4 +56,53 @@ app.put("/api/todos/:id", async (req, res) => {
   console.log("Todo updated successfully");
 });
 
+// Add a tag to a todo
+app.post("/api/todos/:id/tags", async (req, res) => {
+  try {
+    const todo = await Todo.findById(req.params.id);
+    if (!todo) {
+      return res.status(404).json({ message: "Todo not found" });
+    }
+
+    const newTag = req.body.tag;
+    if (!newTag) {
+      return res.status(400).json({ message: "Tag is required" });
+    }
+
+    // Use $addToSet instead of $push to avoid duplicate tags
+    const updatedTodo = await Todo.findByIdAndUpdate(
+      req.params.id,
+      { $addToSet: { tags: newTag } },
+      { new: true }
+    );
+
+    res.json(updatedTodo);
+    console.log("Tag added successfully");
+  } catch (error) {
+    res.status(500).json({ message: "Error adding tag", error: error.message });
+  }
+});
+
+// Remove a tag from a todo
+app.delete("/api/todos/:id/tags/:tag", async (req, res) => {
+  try {
+    const updatedTodo = await Todo.findByIdAndUpdate(
+      req.params.id,
+      { $pull: { tags: req.params.tag } },
+      { new: true }
+    );
+
+    if (!updatedTodo) {
+      return res.status(404).json({ message: "Todo not found" });
+    }
+
+    res.json(updatedTodo);
+    console.log("Tag removed successfully");
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error removing tag", error: error.message });
+  }
+});
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
