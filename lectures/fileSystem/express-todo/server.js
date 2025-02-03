@@ -8,6 +8,7 @@ const FILE_PATH = path.join(__dirname, 'todos.json');
 
 app.use(express.json());
 
+console.log("filePath", FILE_PATH)
 
 app.get('/todos', (req, res) => {
     console.log("get todos hit")
@@ -18,7 +19,7 @@ app.get('/todos', (req, res) => {
 });
 
 app.post('/todos', (req, res) => {
-    console.log("post todos hit")
+    console.log("post todos hit", req.body)
 
     const newTodo = req.body;
     fs.readFile(FILE_PATH, 'utf8', (err, data) => {
@@ -33,7 +34,7 @@ app.post('/todos', (req, res) => {
 }); 
 
 app.put('/todos/:id', (req, res) => {
-    console.log("put todos hit")
+    console.log("put todos hit", req.body, req.params)
 
     const id = parseInt(req.params.id);
     const updatedTodo = req.body;

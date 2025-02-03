@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useState, useEffect, useRef } from "react";
 
 import "./App.css";
@@ -72,27 +73,69 @@ const MatrixBackground = () => {
     />
   );
 };
+=======
+import { useState, useEffect } from 'react'
+import './App.css'
+import axios from 'axios'
+>>>>>>> 70aa466026c52edda5d73c7d3028ca7dccfe51ed
 
 function App() {
   // const [count, setCount] = useState(0)
 
+<<<<<<< HEAD
   const [data, setData] = useState();
   const [newTodo, setNewTodo] = useState("");
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState("");
 
   useEffect(() => {
+=======
+  const [data, setData] = useState()
+  const [flag, setFlag] = useState(false)
+  const [edit, setEdit] = useState({
+    todo: ""
+  })
+  const [render, setRender] = useState(false)
+
+  // test
+  // test
+  // test
+  const [newToDo, setNewToDo] = useState(
+    {
+      todo: "",
+      created: Date.now()
+    }
+  )
+
+
+  useEffect(() => {
+    console.log("useEFFECT TRIGGERED")
+  }, [data])
+
+
+  useEffect(() => {
+    console.warn("USEEFFECT HIT AGAIN")
+>>>>>>> 70aa466026c52edda5d73c7d3028ca7dccfe51ed
     axios({
       method: "get",
       url: "http://localhost:3000/getTodos",
     })
+<<<<<<< HEAD
       .then((res) => {
         console.log("res", res);
         setData(res.data);
+=======
+      .then(res => {
+        console.log("res", res)
+        // console.log("sorted", sorted)
+        setData(res.data)
+
+>>>>>>> 70aa466026c52edda5d73c7d3028ca7dccfe51ed
       })
       .catch((err) => console.log("err", err));
   }, []);
 
+<<<<<<< HEAD
   const handleSubmit = (e) => {
     if (!newTodo.trim()) return;
 
@@ -112,6 +155,81 @@ function App() {
       })
       .catch((err) => console.log("Error adding todo", err));
   };
+=======
+  }, [flag])
+
+  const handleNewToDo = (e) => {
+
+    console.log("handleNewToDo Hit", e)
+    console.log("handleNewToDo Hit", e.target)
+    console.log("handleNewToDo Hit", e.target.value)
+
+    setNewToDo((prev) => ({
+      ...prev,
+      todo: e.target.value
+    }))
+
+
+  }
+  const handleSubmit = (e) => {
+
+    console.log("HandleSubmit HIT", newToDo)
+
+    console.log("i am getting stuff")
+    axios({
+      method: "post",
+      url: "http://localhost:3000/create",
+      data: newToDo
+
+    })
+      .then(res => {
+        console.log("res", res)
+        // setNewToDo({todo: ""})
+        setFlag(!flag)
+      })
+      .catch(err => console.log(err))
+
+  }
+
+  const handleDelete = (e) => {
+
+    console.log("DEL Hit e.target.e", e.target.id)
+
+    axios({
+      method: "delete",
+      url: `http://localhost:3000/delete/${e.target.id}`
+    })
+      .then(res => {
+        console.log("re", res)
+        console.log("RES", res.data._id)
+        setData((prev) => prev.filter((item) => item._id != res.data._id))
+      })
+      .catch(err => console.log(err))
+  }
+
+  const handleEdit = () => {
+    setRender(!render)
+  }
+
+  const handleEditSubmit = (e) => {
+    console.log("HandleEdit HIT", e.target.id)
+    axios({
+      method: "put",
+      url: `http://localhost:3000/edit/${e.target.id}`,
+      data: edit
+    })
+      .then(res => {
+        console.log("$$$$$$$$", res)
+      })
+      .catch(err => console.log(err))
+  }
+
+  const handleEditChange = (e) => {
+    console.log("handleEditChange  HIT", e.target.value)
+    setEdit({ todo: e.target.value })
+  }
+
+>>>>>>> 70aa466026c52edda5d73c7d3028ca7dccfe51ed
 
   const handleDelete = (id) => {
     console.log("Deleting todo:", id);
@@ -153,6 +271,7 @@ function App() {
 
   return (
     <>
+<<<<<<< HEAD
       <MatrixBackground />
       <div className="todo-container">
         <h2>List of crap Shawn doesn't have time to do</h2>
@@ -165,6 +284,62 @@ function App() {
           />
           <button type="submit">Add Todo</button>
         </form>
+=======
+      {/* {console.log("data", data)} */}
+      {/* {console.log("flag", flag)} */}
+      {/* {console.log("EDIT", edit)} */}
+      {console.warn("render", render)}
+      {/* {console.log("newToDo", newToDo)} */}
+      <input onChange={(e) => handleNewToDo(e)} />
+
+      <button onClick={(e) => handleSubmit(e)}>Submit</button>
+
+
+      {data && data.sort((a, b) => b.created - a.created).map((item) => {
+        return (
+
+          <div key={item._id} style={{ marginBottom: "20px" }}>
+
+            <div style={{ border: '2px solid red' }}>
+
+              {/* {render ? <p>TRUE</p>   :   <p>False</p>      }   */}
+
+
+              {render
+                ?
+                (
+                  <div>
+                    <input
+                      defaultValue={item.todo || ""}
+                      onChange={(e) => handleEditChange(e)}
+                    >
+                    </input>
+
+                    <button
+                      id={item._id}
+                      onClick={(e) => handleEditSubmit(e)}
+                    >
+                      Submit
+                    </button>
+
+                  </div>
+                )
+                :
+                (
+                  <p> {item.todo}</p>
+                )
+              }
+
+
+
+              <button id={item._id} onClick={(e) => handleDelete(e)}>delete</button>
+              <button id={item._id} onClick={(e) => handleEdit(e)}>edit</button>
+
+            </div>
+          </div>
+        )
+      })}
+>>>>>>> 70aa466026c52edda5d73c7d3028ca7dccfe51ed
 
         <div className="todo-list">
           {data &&
