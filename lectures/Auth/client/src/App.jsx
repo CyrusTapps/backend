@@ -12,7 +12,13 @@ function App() {
   })
   const handleLogin = (e) => {
     console.log("login", e.target.value)
-    setLogin({ ...prev, [e.target.id]: e.target.value })
+    setLogin(prev => {
+      console.log("prev", prev)
+      return {
+        ...prev,
+        [e.target.id]: e.target.value
+      }
+    })
   }
   const handleLoginSubmit = () => {
     console.log(login)
@@ -57,9 +63,9 @@ function App() {
       </div>
       <br />
       <br />
-<hr />
-<br />
-<br />
+      <hr />
+      <br />
+      <br />
       <div id='register'>
         <h1>Register</h1>
         <input id='username' onChange={(e) => handleRegister(e)} type='text' placeholder='Username' />

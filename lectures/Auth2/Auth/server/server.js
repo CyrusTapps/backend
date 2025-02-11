@@ -39,7 +39,43 @@ app.post("/register", async (req, res) => {
     });
 });
 
+<<<<<<< HEAD
 const PORT = 3000;
+=======
+
+
+require('dotenv').config()
+
+app.use(express.json())
+
+app.post("/register", (req, res) => {
+
+    console.log("Reg hit", req.body)
+    Auth.create(req.body)
+        .then(created => {
+            console.log("created", created)
+            res.status(201).json(created)
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(500).json({ error: "Internal Server Error" })
+        })
+}
+)
+
+app.post("/login", (req, res) => {
+    console.log("login", req.body)
+
+    
+
+
+
+}
+)
+
+
+const PORT = 3000
+>>>>>>> c335a36279677c6aa183b794a3e96740a63be455
 
 app.listen(PORT, () => {
   mongoose.connect(process.env.MONGODB_URI).then(() => {

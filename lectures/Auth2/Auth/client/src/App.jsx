@@ -11,6 +11,7 @@ function App() {
     password: "",
   });
   const handleLogin = (e) => {
+<<<<<<< HEAD
     console.log("login", e.target.value);
     setLogin((prev) => {
       console.log("prev", prev);
@@ -20,6 +21,17 @@ function App() {
       };
     });
   };
+=======
+    console.log("login", e.target.value)
+    setLogin(prev => {
+      console.log("prev", prev)
+      return {
+        ...prev,
+        [e.target.id]: e.target.value
+      }
+    })
+  }
+>>>>>>> c335a36279677c6aa183b794a3e96740a63be455
   const handleLoginSubmit = () => {
     console.log(login);
     axios({
@@ -76,7 +88,11 @@ function App() {
       <hr />
       <br />
       <br />
+<<<<<<< HEAD
       <div id="register">
+=======
+      <div id='register'>
+>>>>>>> c335a36279677c6aa183b794a3e96740a63be455
         <h1>Register</h1>
         <input
           id="username"
