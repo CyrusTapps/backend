@@ -35,24 +35,13 @@ function App() {
       .then((res) => {
         console.log("res", res.data);
 
-        if (res.data.message === "good login") {
+        if (res.data.msg === "good login") {
           alert(`Welcome back : ${res.data.found.username}`);
         } else {
-          alert("Invalid credentials");
+          alert("BAD LOGIN");
         }
       })
-      .catch((error) => {
-        console.log(error);
-        if (error.code === "ERR_NETWORK") {
-          alert(
-            "Unable to connect to server. Please check if the server is running."
-          );
-        } else {
-          alert(
-            `Login failed: ${error.response?.data?.message || "Unknown error"}`
-          );
-        }
-      });
+      .catch((error) => console.log(error));
   };
   const handleRegister = (e) => {
     console.log("reg", register);
